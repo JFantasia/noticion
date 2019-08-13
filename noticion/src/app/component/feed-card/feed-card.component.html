@@ -1,0 +1,21 @@
+<!-- <div class="card" style="width: 90%">
+<img class="card-img-top" src="{{feed.enclosure.link}}" alt="Card image cap">
+<div class="card-body">
+    <h5 class="card-title">{{feed.title}}</h5>
+    <p class="card-text">{{feed.author}} - {{feed.pubDate | date:'dd-MM-yyyy'}}</p>
+    <p class="card-text">{{feed.description}}</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+</div>
+</div> -->
+
+<div class="card mb-4">
+<img class="card-img-top" src="{{feed.enclosure.link}}" alt="Card image cap">
+<div class="card-body">
+    <h2 class="card-title">{{feed.title}}</h2>
+    <p class="card-text">{{feed.description}}</p>
+    <a href="#" class="{{feed.link}}">Ver más &rarr;</a>
+</div>
+<div class="card-footer text-muted">
+    {{feed.author}} - {{feed.pubDate | date:'dd-MM-yyyy'}}
+</div>
+</div>
