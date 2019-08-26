@@ -27,6 +27,9 @@
     </nav>
   
     <!-- Page Content -->
+    <body>
+      
+    
     <div class="container">
   
       <div class="row">
@@ -35,7 +38,7 @@
           <h1 class="my-4">Un portal - Todas las noticias
           </h1>
   
-          <app-feed-card *ngFor="let feed of feeds | filter:filtro" [feed]="feed" ></app-feed-card>
+          <app-feed-card *ngFor="let feed of feeds | filter:filtro |  tendencia:array | fechaOrd: orden" [feed]="feed" [showTitle]="tituloVisible" [showImage]="imageVisible" [showDescription]="descripcionVisible" [showDatos]="datosVisible"></app-feed-card>
         
         </div>
         <!-- Sidebar Widgets Column -->
@@ -69,21 +72,114 @@
               </div>
             </div>
           </div>
+          
   
           <!-- Side Widget -->
           <div class="card my-4">
-            <h5 class="card-header">Side Widget</h5>
+            <h5 class="card-header">Campos que no desee ver </h5>
             <div class="card-body">
-              You can put anything you want inside of these side widgets. They are easy to use, and feature the new Bootstrap 4 card containers!
+              <li>
+                <a>Titulo</a>
+                <input type="checkbox" class="form-check-input" [value]="tituloVisible" (click)="mostrarTitulo()">
+              </li>
+              <li>
+                  <a>Imagen</a>
+                  <input type="checkbox" class="form-check-input" [value]="imageVisible" (click)="mostrarImagen()">
+              </li>
+              <li>
+                  <a>Descripcion</a>
+                  <input type="checkbox" class="form-check-input" [value]="descripcionVisible" (click)="mostrarDescripcion()">
+              </li>
+              <li>
+                  <a>Datos</a>
+                  <input type="checkbox" class="form-check-input" [value]="datosVisible" (click)="mostrarDatos()">
+              </li>
+
             </div>
           </div>
-  
+          <div class="card my-4">
+            <h5 class="card-header">Connotación</h5>
+            <div class="card-body">
+              <li>
+                  <label>
+                      <input type="checkbox" class="form-check-input" name="tendencia" [value]="fav" (click)="mostrarFavorables()">Favorable
+                  </label>
+                
+              </li>
+              <li>
+                  <label>
+                      <input type="checkbox" class="form-check-input" name="tendencia" [value]="desfav" (click)="mostrarDesfavorables()">Desfavorable
+                  </label>
+                  
+              </li>
+              
+            </div>
+          </div>
+          <div class="card my-4">
+            <h5 class="card-header">Orden</h5>
+            <div class="card-body">
+              <li>
+                
+                <label>
+                    <input type="radio" name="orden" [value]="ascendente" (click)="mostrarOrdAsc()"> Ordenar fecha ascendente
+                </label>
+              </li>
+              <li>
+                  <label>
+                      <input type="radio" name="orden" [value]="descendente" (click)="mostrarOrdDesc()"> Ordenar fecha descendente
+                  </label>
+                  
+              </li>
+             
+            
+            </div>
+          </div>
+          <div class="card my-4">
+            <h5 class="card-header">Agregar rss</h5>
+            <div class="card-body">
+              <div class="input-group">
+                  <!-- <input type="text" class="form-control" placeholder="Search for..."> -->
+                  <br>
+                  <a>Nombre rss</a>
+                  <input type="text" class="form-control" id="nombre" [(ngModel)]="nombreRSS" >
+                  <!-- <input type="text" class="form-control" placeholder="Search for..."> -->
+                  <a>URL rss</a>
+                  <input type="text" class="form-control" id="url" [(ngModel)]="urlRSS" >
+               
+                
+                  <!-- <input type="text" class="form-control" placeholder="Search for..."> -->
+                  <button type="button" class="btn btn-primary"  class="form-control"  (click)="agregarRSS()" >Guardar</button>
+                
+              </div>
+            </div>
+          </div>
         </div>
   
       </div>
       <!-- /.row -->
   
     </div>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/6.4.0/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#config-web-app -->
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyAjmDJhhJmyudAto4hmi9uFKIuoGeXoV-M",
+    authDomain: "noticion-7549e.firebaseapp.com",
+    databaseURL: "https://noticion-7549e.firebaseio.com",
+    projectId: "noticion-7549e",
+    storageBucket: "",
+    messagingSenderId: "764676163897",
+    appId: "1:764676163897:web:ca21f2610e54ec4d"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>
+  </body>
     <!-- /.container -->
   
     <!-- Footer -->
@@ -93,5 +189,5 @@
       </div>
       <!-- /.container -->
     </footer>
-
+  
 

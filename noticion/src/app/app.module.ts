@@ -9,20 +9,33 @@ import { FeedService } from './services/feed.service';
 import { FormsModule } from '@angular/forms';
 import { FilterPipe } from './filter.pipe';
 import { FeedListComponent } from './component/feed-list/feed-list.component';
+import { FavorablePipe } from './favorable.pipe';
+import { FechaOrdPipe } from './fecha-ord.pipe';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { environment } from '../environments/environment';
+import { TendenciaPipe } from './tendencia.pipe';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     FeedCardComponent,
     FilterPipe,
-    FeedListComponent
+    FeedListComponent,
+    FavorablePipe,
+    TendenciaPipe,
+    FechaOrdPipe,
+   
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
     HttpModule,
-    FormsModule
+    FormsModule,
+    AngularFireModule.initializeApp(environment.firebase, 'noticion'),
+        AngularFireDatabaseModule
   ],
   providers: [FeedService],
   bootstrap: [AppComponent]

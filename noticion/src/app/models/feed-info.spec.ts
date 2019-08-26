@@ -1,4 +1,4 @@
-import { FeedInfo } from './feed-info';
+import { FeedInfo } from '../models/feed-info';
 
 describe('FeedInfo', () => {
   it('should create an instance', () => {

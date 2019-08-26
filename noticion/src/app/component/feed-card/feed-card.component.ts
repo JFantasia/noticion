@@ -8,7 +8,17 @@ import { Component, OnInit, Input } from '@angular/core';
 export class FeedCardComponent implements OnInit {
 
   @Input() feed: any;
+  @Input() showTitle: boolean;
+  @Input() showDescription: boolean;
+  @Input() showImage: boolean;
+  @Input() showDatos: boolean;
 
+  /* showObj = {
+    titulo: true,
+    descripcion: true,
+    imagen: true
+  }
+ */
   constructor() { }
 
   ngOnInit() {
@@ -17,4 +27,12 @@ export class FeedCardComponent implements OnInit {
   openLinkInBrowser() {
     window.open(this.feed.link);
   }
+
+  /* deboMostrar(elem) {
+    return this.showObj[elem];
+  }
+
+  cambiarVista(elem) {
+    this.showObj[elem] = ! this.showObj[elem];
+  } */
 }
