@@ -5,7 +5,7 @@ import { FeedInfo } from './models/feed-info';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Observable } from 'rxjs';
-import { isArray } from 'util';
+
 
 @Component({
   selector: 'app-root',
@@ -39,31 +39,30 @@ export class AppComponent {
   ascendente:boolean = false;
   descendente:boolean = false;
 
-  noticias: Observable<any[]>;
+  rss: Observable<any[]>;
+  rssRef:any;
 
   nombreRSS:string;
   urlRSS:string;
-  
+
+
       
   constructor (
     private feedService: FeedService,
-    db: AngularFireDatabase
-  ) {
-    this.noticias = db.list('rss').valueChanges()
-    this.noticias.subscribe(
-      data => {
-        console.log(data[0].url)
-      }
-    );
+    public db: AngularFireDatabase,
 
+
+  ) {
+    this.rssRef = db.list('rss');
   }
 
   ngOnInit() {
     // this.tituloVisible=true;[];
+   
     this.arrayFav=[];
     this.arrayDesfav=[];
     this.array=[];
-    this.noticias.subscribe(
+    this.rssRef.valueChanges().subscribe(
       data => {
 
         let i=0;
@@ -249,6 +248,18 @@ export class AppComponent {
   }
 
   agregarRSS(){
-    console.log(this.nombreRSS,this.urlRSS)
+    let valid = /^(ftp|http|https):\/\/[^ "]+$/.test(this.urlRSS);
+    if(valid){
+      this.rssRef.push(
+        {
+          nombre: this.nombreRSS,
+          url: this.urlRSS
+          
+        }
+      );
+    }
+    else{
+
+    }
   }
 }
