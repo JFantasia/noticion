@@ -9,13 +9,16 @@
 </div> -->
 
 <div class="card mb-4">
-    <img class="card-img-top"  src="{{feed.enclosure.link}}" alt="Card image cap" *ngIf="showImage">
+    <img class="card-img-top"  src="{{feed.image}}" alt="Card image cap" *ngIf="showImage">
     <div class="card-body">
         <h2 class="card-title" *ngIf="showTitle">{{feed.title}}</h2>
         <p class="card-text" *ngIf="showDescription">{{feed.description}}</p>
-        <a href="#" class="{{feed.link}}">Ver más &rarr;</a>
+        <a href="{{feed.link}}" class="{{feed.link}}">Ver más &rarr;</a>
     </div>
     <div class="card-footer text-muted" *ngIf="showDatos" >
         {{feed.author}} - {{feed.pubDate | date:'dd-MM-yyyy'}}
+    </div>
+    <div class="card-footer text-muted" *ngIf="showDatos" >
+        <button (click)=guardarNoticia()>guardar noticia</button>
     </div>
 </div>

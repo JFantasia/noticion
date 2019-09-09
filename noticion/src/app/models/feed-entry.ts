@@ -10,4 +10,5 @@ export class FeedEntry {
     content: string;
     image: string;
     enclosure: {};
+    source: string;
   }

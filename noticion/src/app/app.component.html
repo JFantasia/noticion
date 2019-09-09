@@ -38,7 +38,7 @@
           <h1 class="my-4">Un portal - Todas las noticias
           </h1>
   
-          <app-feed-card *ngFor="let feed of feeds | filter:filtro |  tendencia:array | fechaOrd: orden" [feed]="feed" [showTitle]="tituloVisible" [showImage]="imageVisible" [showDescription]="descripcionVisible" [showDatos]="datosVisible"></app-feed-card>
+          <app-feed-card *ngFor="let feed of feeds | filter:filtro |  tendencia:array | fechaOrd: orden" [feed]="feed" [showTitle]="tituloVisible" [showImage]="imageVisible" [showDescription]="descripcionVisible" [showDatos]="datosVisible" (resultado)="noticiaGuardar($event)"></app-feed-card>
         
         </div>
         <!-- Sidebar Widgets Column -->
@@ -64,8 +64,8 @@
                   <ul class="list-unstyled mb-0">
                     <li *ngFor="let kk of feedUrlKeys">
                       <a href="#" (click)="getRSS(feedUrl[kk][0])">{{kk}}</a>
-                      <input type="checkbox" *ngIf="feedUrl[kk][1] == 0" class="form-check-input" id="{{kk}}" (change)="updateRSS($event, kk)">
-                      <input type="checkbox" *ngIf="feedUrl[kk][1] == 1" checked class="form-check-input" id="{{kk}}" (change)="updateRSS($event, kk)">
+                      <input type="checkbox" *ngIf="feedUrl[kk][3] == 0" class="form-check-input" id="{{kk}}" (change)="updateRSS($event, kk)">
+                      <input type="checkbox" *ngIf="feedUrl[kk][3] == 1" checked class="form-check-input" id="{{kk}}" (change)="updateRSS($event, kk)">
                     </li>
                   </ul>
                 </div>
@@ -119,16 +119,14 @@
             <h5 class="card-header">Orden</h5>
             <div class="card-body">
               <li>
-                
                 <label>
                     <input type="radio" name="orden" [value]="ascendente" (click)="mostrarOrdAsc()"> Ordenar fecha ascendente
                 </label>
               </li>
               <li>
-                  <label>
-                      <input type="radio" name="orden" [value]="descendente" (click)="mostrarOrdDesc()"> Ordenar fecha descendente
-                  </label>
-                  
+                <label>
+                    <input type="radio" name="orden" [value]="descendente" (click)="mostrarOrdDesc()"> Ordenar fecha descendente
+                </label>
               </li>
              
             
@@ -137,20 +135,35 @@
           <div class="card my-4">
             <h5 class="card-header">Agregar rss</h5>
             <div class="card-body">
-              <div class="input-group">
                   <!-- <input type="text" class="form-control" placeholder="Search for..."> -->
-                  <br>
+                  
                   <a>Nombre rss</a>
-                  <input type="text" class="form-control" id="nombre" [(ngModel)]="nombreRSS" >
+                  <input type="text" class="form-control" id="nombre" [(ngModel)]="nombreRSS" ><br>
+                  
                   <!-- <input type="text" class="form-control" placeholder="Search for..."> -->
                   <a>URL rss</a>
-                  <input type="text" class="form-control" id="url" [(ngModel)]="urlRSS" >
-               
-                
+                  <input type="text" class="form-control" id="url" [(ngModel)]="urlRSS" ><br>
+
+                  <a>URL rss</a>
+                  <select id="cat" [(ngModel)]="catRSS">
+                    <option *ngFor="let cat of categorias" value="{{cat.nombre}}">
+                    {{cat.nombre}}
+                    </option>
+                  </select>
+                  <br>
                   <!-- <input type="text" class="form-control" placeholder="Search for..."> -->
                   <button type="button" class="btn btn-primary"  class="form-control"  (click)="agregarRSS()" >Guardar</button>
                 
-              </div>
+              
+            </div>
+          </div>
+          <div class="card my-4">
+            <h5 class="card-header">guardar rss</h5>
+            <div class="card-body">
+                
+                  <button type="button" class="btn btn-primary"  class="form-control"  (click)="guardarNoticias()" >Guardar</button>
+                
+              
             </div>
           </div>
         </div>
