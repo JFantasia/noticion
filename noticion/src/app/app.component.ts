@@ -4,7 +4,12 @@ import { FeedService } from './services/feed.service';
 import { AngularFireDatabase } from '@angular/fire/database';
 
 import { Noticia } from './models/noticia';
+import {Md5} from 'ts-md5/dist/md5';
+import { Usuario } from './models/usuario';
 
+const md5 = new Md5();
+
+const uuidv3 = require('uuid/v3');
 
 @Component({
   selector: 'app-root',
@@ -17,6 +22,8 @@ import { Noticia } from './models/noticia';
   </ul>` */
 })
 export class AppComponent {
+   
+
   // @ViewChild(FeedCardComponent, null) hijo: FeedCardComponent;
   filtro: string = "";
   feedUrl: any[] = [];
@@ -41,6 +48,8 @@ export class AppComponent {
   rssRef: any;
   catRef: any;
   notRef: any;
+  userRef: any;
+
 
   nombreRSS: string;
   urlRSS: string;
@@ -49,28 +58,43 @@ export class AppComponent {
   cat: any;
   categorias: string[];
 
-  arregloNotRef: any ;
-  noticias:Noticia[] = [];
+  arregloNotRef: any;
+  noticias: Noticia[] = [];
 
+  nombreUsuarioR: string;
+  passwordUsuarioR: string;
+  nombreUsuarioL: string;
+  passwordUsuarioL: string;
+
+  usuarios:Usuario;
+  public session:Usuario;
+  catFavUsuario:string[];
   constructor(
     private feedService: FeedService,
-    public db: AngularFireDatabase,)
-     {
+    public db: AngularFireDatabase, ) {
     this.rssRef = db.list('rss');
     this.catRef = db.list('categoria');
-    this.notRef = db.list('noticias')
+    this.notRef = db.list('noticias');
+    //this.userRef = db.list('usuario');
   }
 
   ngOnInit() {
     // this.tituloVisible=true;[];
     this.catRef.valueChanges().subscribe(data => {
       this.categorias = data;
-      
+
     }
     );
+    /*this.userRef.valueChanges().subscribe(data => {
+      this.usuarios = data;
+
+    }
+    );*/
+    //console.log('this.catRef.update',this.catRef.update("jahhasggas",{nombre:'pingo'}));
+
     this.notRef.valueChanges().subscribe(data => {
       this.arregloNotRef = data;
-      
+
     }
     );
     this.arrayFav = [];
@@ -80,10 +104,10 @@ export class AppComponent {
       data => {
         let i = 0;
         for (let cat of data) {
-          this.feedUrl[cat.nombre] = [cat.url,cat.aceptable,cat.categoria, 1];
+          this.feedUrl[cat.nombre] = [cat.url, cat.aceptable, cat.categoria, 1];
         }
         this.rss = data;
-        
+
         /* data => {
           console.log(this.rssRef.child('Economía'))
           let i=0;
@@ -93,11 +117,11 @@ export class AppComponent {
         this.feedUrlBD = this.feedUrl;
         this.feedUrlKeys = Object.keys(this.feedUrl);
         this.refreshFeed();
-        console.log(this.feedUrlKeys,this.feedUrlKeys.length)
+        console.log(this.feedUrlKeys, this.feedUrlKeys.length)
 
       }
     );
-    
+
   }
 
   /* getClarinCultura() {
@@ -147,20 +171,21 @@ export class AppComponent {
       error => console.log(error));
   }
 
-  refreshURL(feedUrl:string) {
+  refreshURL(feedUrl: string) {
     this.feedService.getFeedContent(feedUrl, this.filtro).subscribe(
-      
+
       feed => {
-        for (let i=0;i<feed.items.length; i++) {
-          
-         let not:Noticia = new Noticia();   
-          not.title=feed.items[i].title;
-          not.description=feed.items[i].description;
-          not.author=feed.items[i].author;
-          not.pubDate=feed.items[i].pubDate;
-          not.link=feed.items[i].link;
-          not.image=feed.items[i].enclosure.link;
-          not.srcRSS=feedUrl;
+        for (let i = 0; i < feed.items.length; i++) {
+
+          let not: Noticia = new Noticia();
+          not.author = feed.items[i].author;
+          not.description = feed.items[i].description;
+          not.image = feed.items[i].enclosure.link;
+          not.link = feed.items[i].link;
+          not.pubDate = feed.items[i].pubDate;
+          not.srcRSS = feedUrl;
+          not.title = feed.items[i].title;
+
           this.noticias.push(not);
         }
         this.feeds = this.feeds.concat(this.noticias);
@@ -207,7 +232,7 @@ export class AppComponent {
   mostrarImagen() {
     this.imageVisible = !this.imageVisible;
     // this.hijo.cambiarVista("imagen")
-  } 
+  }
   mostrarDescripcion() {
     this.descripcionVisible = !this.descripcionVisible;
   }
@@ -294,7 +319,7 @@ export class AppComponent {
       }, this);
       console.log(key) */
     let valid = /^(ftp|http|https):\/\/[^ "]+$/.test(this.urlRSS);
-    if (valid&&(this.nombreRSS&&indice)) {
+    if (valid && (this.nombreRSS && indice)) {
       this.rssRef.push(
 
         {
@@ -310,51 +335,98 @@ export class AppComponent {
 
     }
   }
-  guardarNoticias(){
+  guardarNoticias() {
     //let url = "http://wvw.nacion.com/rss/economia.xml";
-    console.log(this.feedUrl['Nación - Economía'][0],this.feedUrl)
+    console.log(this.feedUrl['Nación - Economía'][0], this.feedUrl)
+    console.log(this.noticias[1].link, this.arregloNotRef[0].link,this.noticias[1].link== this.arregloNotRef[0].link, "thisnotice")
+    //console.log('this.catRef.update',this.catRef.update("1",{nombre:'Economíaaa'}));
+
     this.feedUrlKeys.forEach(element => {
-      if(this.feedUrl[element][1]==true){
+      if (this.feedUrl[element][1] == true) {
         this.noticias.forEach(elem => {
-          let count=0;
-          if(this.feedUrl[element][0]==elem.srcRSS){
-            this.arregloNotRef.forEach(e => {
-              if(!(e.link==elem.link)){
-                this.notRef.push({
-                  author: elem.author,
-                  description: elem.description,
-                  image: elem.image || '',
-                  link: elem.link,
-                  pubDate: elem.pubDate,
-                  srcRSS: elem.srcRSS,
-                  title: elem.title
-                })
-              }
-            });
-           
+          if (this.feedUrl[element][0] == elem.srcRSS) {
+ 
+            let uuid = uuidv3(elem.link, uuidv3.DNS);
+              this.notRef.update(uuid,{
+                author: elem.author,
+                description: elem.description,
+                image: elem.image || '',
+                link: elem.link,
+                pubDate: elem.pubDate,
+                srcRSS: elem.srcRSS,
+                title: elem.title
+              })
           }
-          else{
-            console.log("Ya esta cargada che",count)
-          }
-          count=count+1;
+
         });
-        
+
       }
-      
-      
-      console.log(element,"rss individual")
+
+
+      console.log(element, "rss individual")
     });
-    
 
-    /* this.feedService.getFeedContent(url, this.filtro).subscribe(
-      feed => {
-        console.log(feed,"nacion")
 
-        }
-        //
-    ) */
+   
   }
-  noticiaGuardar(data) {
+  agregarFavoritos(data) {
+    console.log(data.carpetas)
+   // for(let c of data.carpetas)
+    
+  }
+  agregarCarpetas(data){
+    this.db.list('usuario/'+this.session.username+'/carpetasFav').push({
+      nombre: data.nombre,
+    })
     console.log(data)
   }
+  registrarUsuario(){
+    let existe:boolean;
+    let nameUser = this.nombreUsuarioR;
+
+    
+      let user = this.db.object('usuario/'+nameUser).valueChanges()
+      .subscribe(data =>{
+        if(!data){
+          //seguir registro
+        }
+        console.log("asc")
+      })
+      
+    
+  }
+  loginUsuario(){
+    let nameUser = this.nombreUsuarioL;
+    
+    let existe:boolean;
+    let user:any = this.db.object('usuario/'+nameUser).valueChanges()
+    .subscribe(data =>{
+      user = data;
+      console.log('user', user);
+      if(user){
+        if(user.password==md5.appendStr(this.passwordUsuarioL).end()){
+          existe=true;
+          console.log("existe")
+        }
+      }
+      if(existe){
+        let usuarionuevo:Usuario = new Usuario();
+        usuarionuevo.username = user.username;
+        usuarionuevo.password = user.password;
+        usuarionuevo.favoritos = user.favoritos;
+        usuarionuevo.carpetaFav = user.carpetasFav;
+        this.session = usuarionuevo;
+        console.log(this.session)
+
+      }
+
+    });
+
+    //console.log(user)    
+    
+      
+    
+    
+  }
+  
 }

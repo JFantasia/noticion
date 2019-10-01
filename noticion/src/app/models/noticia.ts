@@ -1,18 +1,20 @@
 export class Noticia {
-    title:string;
     author:string;
     description:string;
-    pubDate:string;
-    link:string;
     image:string;
+    link:string;
+    pubDate:string;
     srcRSS:string;
+    title:string;
+
     constructor(){
-        this.title="";
         this.author="";
         this.description="";
-        this.pubDate="";
-        this.link="";
         this.image="";
+        this.link="";
+        this.pubDate="";
         this.srcRSS="";
+        this.title="";
+
     }
 }
